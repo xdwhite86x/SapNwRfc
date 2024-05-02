@@ -134,6 +134,17 @@ namespace SapNwRfc.Internal.Interop
         public virtual RfcResultCode Invoke(IntPtr rfcHandle, IntPtr funcHandle, out RfcErrorInfo errorInfo)
             => RfcInvoke(rfcHandle, funcHandle, out errorInfo);
 
+        [DllImport(SapNwRfcDllName, CharSet = CharSet.Unicode)]
+        private static extern IntPtr RfcCreateFunctionDesc(string functionName, out RfcErrorInfo errorInfo);
+
+        public virtual IntPtr CreateFunctionDesc(string functionName, out RfcErrorInfo errorInfo)
+            => RfcCreateFunctionDesc(functionName, out errorInfo);
+
+        [DllImport(SapNwRfcDllName)]
+        private static extern RfcResultCode RfcAddParameter(IntPtr funcHandle, in RfcParameterDescription paramDesc, out RfcErrorInfo errorInfo);
+
+        public virtual RfcResultCode AddParameter(IntPtr funcHandle, in RfcParameterDescription paramDesc, out RfcErrorInfo errorInfo)
+            => RfcAddParameter(funcHandle, in paramDesc, out errorInfo);
         #endregion
 
         #region Type
@@ -179,6 +190,23 @@ namespace SapNwRfc.Internal.Interop
             return resultCode;
         }
 
+        [DllImport(SapNwRfcDllName, CharSet = CharSet.Unicode)]
+        private static extern IntPtr RfcCreateTypeDesc(string typeName, out RfcErrorInfo errorInfo);
+
+        public virtual IntPtr CreateTypeDesc(string typeName, out RfcErrorInfo errorInfo)
+            => RfcCreateTypeDesc(typeName, out errorInfo);
+
+        [DllImport(SapNwRfcDllName, CharSet = CharSet.Unicode)]
+        private static extern RfcResultCode RfcAddTypeField(IntPtr typeHandle, in RfcFieldDescription typeDesc, out RfcErrorInfo errorInfo);
+
+        public virtual RfcResultCode AddTypeField(IntPtr typeHandle, in RfcFieldDescription typeDesc, out RfcErrorInfo errorInfo)
+            => RfcAddTypeField(typeHandle, in typeDesc, out errorInfo);
+
+        [DllImport(SapNwRfcDllName)]
+        private static extern RfcResultCode RfcSetTypeLength(IntPtr typeHandle, uint nonUnicodeSize, uint unicodeSize, out RfcErrorInfo errorInfo);
+
+        public virtual RfcResultCode SetTypeLength(IntPtr typeHandle, uint nonUnicodeSize, uint unicodeSize, out RfcErrorInfo errorInfo)
+            => RfcSetTypeLength(typeHandle, nonUnicodeSize, unicodeSize, out errorInfo);
         #endregion
 
         #region Data
@@ -379,6 +407,12 @@ namespace SapNwRfc.Internal.Interop
         public virtual RfcResultCode AddServerStateChangedListener(IntPtr rfcHandle, RfcServerStateChangeListener stateChangeListener, out RfcErrorInfo errorInfo)
             => RfcAddServerStateChangedListener(rfcHandle, stateChangeListener, out errorInfo);
 
+        [DllImport(SapNwRfcDllName)]
+        private static extern RfcResultCode RfcInstallServerFunction(string sysid, IntPtr funcDescHandle,
+            RfcServerFunction function, out RfcErrorInfo errorInfo);
+
+        public virtual RfcResultCode InstallServerFunction(string sysid, IntPtr funcDescHandle, RfcServerFunction function, out RfcErrorInfo errorInfo)
+            => RfcInstallServerFunction(sysid, funcDescHandle, function, out errorInfo);
         #endregion
     }
 }
